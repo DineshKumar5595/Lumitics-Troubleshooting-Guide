@@ -20,7 +20,6 @@
       margin: 0;
     }
 
-    /* Sketch-based Card Design */
     .card {
       background: rgba(255, 255, 255, 0.98); 
       padding: 30px; 
@@ -37,7 +36,6 @@
       min-height: 700px;
     }
 
-    /* Question Box */
     #display-text {
       width: 85%;
       border: 2px solid #004085;
@@ -54,7 +52,6 @@
       background-color: #fff;
     }
 
-    /* Oval Action Buttons */
     #yes-no-area {
       display: flex;
       justify-content: space-around;
@@ -75,7 +72,6 @@
     }
     .oval-btn:hover { background: #004085; color: white; transform: scale(1.05); }
 
-    /* Arrow Back Button */
     .arrow-back {
       background: #f8f9fa;
       color: #004085;
@@ -88,7 +84,6 @@
       clip-path: polygon(15% 0%, 100% 0%, 100% 100%, 15% 100%, 0% 50%);
     }
 
-    /* Home Button Icon */
     .home-container {
       border: 2px solid #004085;
       border-radius: 20px;
@@ -99,7 +94,6 @@
     .home-icon { font-size: 40px; display: block; }
     .home-text { font-size: 11px; font-weight: bold; color: #004085;}
 
-    /* Menu Styling */
     #searchBar { width: 95%; padding: 15px; font-size: 1rem; margin-bottom: 20px; border: 2px solid #004085; border-radius: 12px; }
     .menu-btn { display: block; width: 95%; margin: 12px auto; background-color: #004085; color: white; padding: 18px; border-radius: 12px; text-align: left; border: none; cursor: pointer; font-size: 1rem; }
   </style>
@@ -120,14 +114,11 @@
 
     <div id="diagnostic-screen" style="display: none; flex-direction: column; align-items: center; width: 100%;"> 
       <div id="display-text"></div> 
-      
       <div id="yes-no-area">
         <button class="oval-btn" id="yes-btn" onclick="makeChoice('Yes')">Yes</button> 
         <button class="oval-btn" id="no-btn" onclick="makeChoice('No')">No</button> 
       </div>
-
       <button id="back-btn" class="arrow-back" onclick="goBack()">Back to Previous Step</button>
-
       <div class="home-container" onclick="goToMenu()">
         <span class="home-text">HOME</span>
         <span class="home-icon">🏠</span>
@@ -137,96 +128,74 @@
 
   <script>
     const logicTree = {
-      /* FULL UPDATED RFID LOGIC  */
-      "rfid_start": { type: "question", text: "Is the device flashing green now? [cite: 222]", yesNext: "rf_tap_diff_prompt", noNext: "rf_no_fg_check" },
+      // RFID LOGIC: INDIVIDUAL PROCESSES 
+      "rfid_start": { type: "question", text: "Is the device flashing green now? ", yesNext: "rf_tap_diff", noNext: "rf_no_fg" },
+      "rf_tap_diff": { type: "question", text: "Please tap a different card on the reader. ", yesNext: "rf_detect_diff", noNext: "rf_detect_diff" },
+      "rf_detect_diff": { type: "question", text: "Did the device detect another card? ", yesNext: "rf_flash_gr_rd", noNext: "rf_cont_fg_q" },
+      "rf_cont_fg_q": { type: "question", text: "Does the device continue to flash green, or is there no light at all? ", yesText: "Flashing Green", yesNext: "rf_fg_escalate", noText: "No light", noNext: "rf_no_light_res" },
+      "rf_fg_escalate": { type: "question", text: "The LED is flashing green. Please ask for their availability and contact details. Escalate this issue to the hardware team. ", yesNext: "tech_support_res", noNext: "tech_support_res" },
+      "rf_no_light_res": { type: "question", text: "Go to device not turning on. ", yesNext: "power_start", noNext: "power_start" },
       
-      "rf_tap_diff_prompt": { type: "question", text: "Please tap a different card on the reader. [cite: 241] <br><br> Did the device detect another card? [cite: 9]", yesNext: "rf_led_flash_q", noNext: "rf_flash_green_check" },
+      "rf_flash_gr_rd": { type: "question", text: "Did the device's LED flash green and red when you tapped the card? ", yesNext: "rf_try_new_card", noNext: "rf_check_led_cond" },
+      "rf_check_led_cond": { type: "question", text: "What is the condition of the LED now? ", yesText: "Solid Green", yesNext: "rf_solid_gr_imm", noText: "Flashing Red", noNext: "rf_red_jump" },
+      "rf_red_jump": { type: "question", text: "Go to LED Blinking Red. ", yesNext: "led_start", noNext: "led_start" },
       
-      "rf_flash_green_check": { type: "question", text: "Does the device continue to flash green, or is there no light at all? [cite: 238]", yesText: "Flashing Green [cite: 254]", yesNext: "rf_escalate_hw", noText: "No light [cite: 243]", noNext: "rf_no_light_res" },
+      "rf_solid_gr_imm": { type: "question", text: "Did the LED change to solid green immediately after starting the device? ", yesNext: "rf_get_id_op", noNext: "rf_tapped_other" },
+      "rf_tapped_other": { type: "question", text: "Did you tap other card? ", yesNext: "rf_restart_dev", noNext: "rf_escalate_hw_now" },
+      "rf_escalate_hw_now": { type: "question", text: "Please ask for their availability and contact details. Escalate this issue to the hardware team. ", yesNext: "tech_support_res", noNext: "tech_support_res" },
+
+      "rf_try_new_card": { type: "question", text: "Did you try tapping a new card? ", yesNext: "rf_service_replace_q", noNext: "rf_used_before_q" },
+      "rf_used_before_q": { type: "question", text: "Have you used this card before? ", yesNext: "rf_get_id_op", noNext: "rf_service_replace_q" },
+      "rf_service_replace_q": { type: "question", text: "Are you starting a new service, or are you replacing a lost card? ", yesText: "Replacement", yesNext: "rf_req_id_num", noText: "New Service", noNext: "rf_inform_cs_q" },
+      "rf_req_id_num": { type: "question", text: "Please let me know the Device ID and the RFID card number. ", yesNext: "rf_leave_on_5", noNext: "rf_leave_on_5" },
+      "rf_leave_on_5": { type: "question", text: "Please leave the device on for five minutes while we update it. ", yesNext: "rf_cs_inform_hw", noNext: "rf_cs_inform_hw" },
+      "rf_cs_inform_hw": { type: "question", text: "CS: Please inform the hardware team to update the RFID card number. ", yesNext: "rf_test_card_req", noNext: "rf_test_card_req" },
+      "rf_test_card_req": { type: "question", text: "Once the hardware team updates the device, please ask the client to test the card. ", yesNext: "rf_able_to_use_q", noNext: "rf_able_to_use_q" },
+      "rf_able_to_use_q": { type: "question", text: "Was the client able to use the new card? ", yesNext: "rf_inform_notify_first", noNext: "rf_led_after_upd_q" },
+      "rf_inform_notify_first": { type: "resolution", text: "Please inform the client that if they want to use a new card, they must notify us first. " },
+      "rf_led_after_upd_q": { type: "question", text: "Is the device LED blinking green and red now, or is it just flashing green? ", yesText: "Green & Red", yesNext: "rf_check_time_tied", noText: "Flashing Green", noNext: "rf_restart_dev" },
+      "rf_check_time_tied": { type: "question", text: "Is this card tied to a time-based operation? CS: Verify the RFID type in the Unit Tracker. ", yesNext: "rf_is_time_tied_final", noNext: "rf_restart_dev" },
+      "rf_is_time_tied_final": { type: "question", text: "Is the updated service time-tied? ", yesNext: "rf_allocated_window_res", noNext: "rf_restart_dev" },
+      "rf_allocated_window_res": { type: "resolution", text: "Please inform the client that they can start using the card within the allocated time window. " },
       
-      "rf_no_light_res": { type: "resolution", text: "Go to device not turning on [cite: 240]" },
+      "rf_restart_dev": { type: "question", text: "Please restart the device. ", yesNext: "rf_able_to_tap_q", noNext: "rf_able_to_tap_q" },
+      "rf_able_to_tap_q": { type: "question", text: "Are you able to tap the card now? ", yesNext: "rf_ready_res", noNext: "rf_try_diff_card" },
+      "rf_try_diff_card": { type: "question", text: "Could you please try a different card? Does it work? ", yesNext: "rf_ready_res", noNext: "rf_card_num_correct_q" },
+      "rf_card_num_correct_q": { type: "question", text: "Is the card number provided correct? CS: Ask for picture. ", yesText: "Correct", yesNext: "rf_ask_avail_hw", noText: "No", noNext: "rf_req_id_num" },
+      "rf_ask_avail_hw": { type: "question", text: "Please ask for their availability and contact details. Escalate this issue to the hardware team. ", yesNext: "tech_support_res", noNext: "tech_support_res" },
+      "rf_ready_res": { type: "resolution", text: "The device is ready for operation now. " },
+
+      "rf_inform_cs_q": { type: "question", text: "Have you informed CS about starting the new service? ", yesNext: "rf_req_id_num", noNext: "rf_need_service_details" },
+      "rf_need_service_details": { type: "question", text: "I need the following service details: Service Name and Operation Time. ", yesNext: "rf_manager_check", noNext: "rf_manager_check" },
+      "rf_manager_check": { type: "resolution", text: "We will check with your account manager and get back to you. " },
+
+      "rf_get_id_op": { type: "question", text: "Please let me know the Device ID, and we will check its operation type. ", yesNext: "rf_op_type_q", noNext: "rf_op_type_q" },
+      "rf_op_type_q": { type: "question", text: "What is the operation type of this device? ", yesText: "RFID Only", yesNext: "rf_req_card_num", noText: "Other", noNext: "rf_other_op_q" },
+      "rf_req_card_num": { type: "question", text: "What is the card number? ", yesNext: "rf_check_hw_team", noNext: "rf_check_hw_team" },
+      "rf_check_hw_team": { type: "question", text: "Check the card number with the hardware team. ", yesNext: "rf_hw_num_config_q", noNext: "rf_hw_num_config_q" },
+      "rf_hw_num_config_q": { type: "question", text: "Is the card number configured on the device? ", yesNext: "rf_restart_dev", noNext: "rf_not_in_sys_res" },
+      "rf_not_in_sys_res": { type: "question", text: "The card number is not in the system. Please let me know the Device ID and the RFID card number. ", yesNext: "rf_req_id_num", noNext: "rf_req_id_num" },
       
-      "rf_no_fg_check": { type: "question", text: "What is the LED status now? [cite: 258]", yesText: "Solid Green [cite: 260]", yesNext: "rf_press_green_btn", noText: "No [cite: 256]", noNext: "rf_no_fg_final" },
+      "rf_other_op_q": { type: "question", text: "Is the operation type: Time based, Card-Time based, or No card? ", yesText: "Time/No Card", yesNext: "rf_solid_gr_starting_q", noText: "Card-Time", noNext: "rf_window_notice_act" },
+      "rf_solid_gr_starting_q": { type: "question", text: "Does the machine's LED show solid green when starting the device? ", yesNext: "rf_auto_trigger_res", noNext: "tech_support_res" },
+      "rf_auto_trigger_res": { type: "resolution", text: "There is no need to tap the card. The machine will automatically trigger the service. " },
+      "rf_window_notice_act": { type: "question", text: "The device is set to operate within a certain time window. You need to follow that schedule when tapping the card. ", yesNext: "rf_change_time_q", noNext: "rf_change_time_q" },
+      "rf_change_time_q": { type: "question", text: "Do you want to change the operation time? ", yesNext: "rf_cs_get_time", noNext: "rf_follow_allocated" },
+      "rf_cs_get_time": { type: "resolution", text: "CS: Please get the time and inform the hardware team. " },
+      "rf_follow_allocated": { type: "resolution", text: "Please use the device based on the allocated time. " },
 
-      "rf_no_fg_final": { type: "question", text: "What is the condition of the LED now? [cite: 226]", yesText: "Solid Green [cite: 249]", yesNext: "rf_solid_green_branch", noText: "No Light [cite: 247]", noNext: "rf_no_light_jump" },
-      
-      "rf_no_light_jump": { type: "resolution", text: "Go to Device Not turning on [cite: 235]" },
+      "rf_no_fg": { type: "question", text: "What is the LED status now? ", yesText: "Solid Green", yesNext: "rf_press_gr_act", noText: "No", noNext: "rf_no_fg_final_q" },
+      "rf_no_fg_final_q": { type: "question", text: "What is the condition of the LED now? ", yesText: "Solid Green", yesNext: "rf_solid_gr_imm", noText: "No Light", noNext: "rf_no_light_res" },
+      "rf_press_gr_act": { type: "question", text: "Solid Green. Please press the green button. ", yesNext: "rf_bucket_move_q", noNext: "rf_bucket_move_q" },
+      "rf_bucket_move_q": { type: "question", text: "Did the weight bucket move? ", yesNext: "rf_restart_dev_check", noNext: "rf_restart_dev" },
+      "rf_restart_dev_check": { type: "question", text: "Did the device flash green after restarting? ", yesNext: "rf_tap_card_final_act", noNext: "rf_check_led_cond" },
+      "rf_tap_card_final_act": { type: "question", text: "Please tap the card now. ", yesNext: "rf_led_chg_solid_q", noNext: "rf_led_chg_solid_q" },
+      "rf_led_chg_solid_q": { type: "question", text: "Did the LED change from flashing to solid green? ", yesNext: "rf_ready_res", noNext: "rf_tap_diff" },
 
-      "rf_press_green_btn": { type: "question", text: "Please press the green button [cite: 262] <br><br> Did the weight bucket move? [cite: 265]", yesNext: "rf_restarted_flash", noNext: "rf_restart_now_act" },
-
-      "rf_restarted_flash": { type: "question", text: "Did the device flash green after restarting? [cite: 272]", yesNext: "rf_tap_card_final", noNext: "rf_no_fg_final" },
-
-      "rf_tap_card_final": { type: "question", text: "Please tap the card now. [cite: 278] <br><br> Did the LED change from flashing to solid green? [cite: 281]", yesNext: "rf_ready_res", noNext: "rf_tap_diff_prompt" },
-
-      "rf_led_flash_q": { type: "question", text: "Did the device's LED flash green and red when you tapped the card? [cite: 14]", yesNext: "rf_tapping_new_q", noNext: "rf_led_condition_q" },
-
-      "rf_led_condition_q": { type: "question", text: "What is the condition of the LED now? [cite: 226]", yesText: "Solid Green [cite: 249]", yesNext: "rf_solid_green_branch", noText: "Flashing Red [cite: 245]", noNext: "rf_red_jump" },
-
-      "rf_red_jump": { type: "resolution", text: "Go to LED Blinking Red [cite: 227]" },
-
-      "rf_solid_green_branch": { type: "question", text: "Did the LED change to solid green immediately after starting the device? [cite: 230]", yesNext: "rf_check_op_type", noNext: "rf_tapped_other_q" },
-
-      "rf_tapped_other_q": { type: "question", text: "Did you tap other card? [cite: 234]", yesNext: "rf_restart_now_act", noNext: "rf_escalate_hw" },
-
-      "rf_tapping_new_q": { type: "question", text: "Did you try tapping a new card? [cite: 20]", yesNext: "rf_new_or_lost_q", noNext: "rf_used_before_q" },
-
-      "rf_used_before_q": { type: "question", text: "Have you used this card before? [cite: 162]", yesNext: "rf_check_op_type", noNext: "rf_new_or_lost_q" },
-
-      "rf_new_or_lost_q": { type: "question", text: "Are you starting a new service, or are you replacing a lost card? [cite: 25]", yesText: "Replacement [cite: 28]", yesNext: "rf_update_process", noText: "New Service [cite: 146]", noNext: "rf_informed_cs_q" },
-
-      "rf_informed_cs_q": { type: "question", text: "Have you informed CS about starting the new service? [cite: 149]", yesNext: "rf_update_process", noNext: "rf_need_service_details" },
-
-      "rf_need_service_details": { type: "resolution", text: "I need the following service details: Service Name and Operation Time. [cite: 155] We will check with your account manager and get back to you. [cite: 157]" },
-
-      "rf_update_process": { type: "question", text: "Please let me know the Device ID and the RFID card number. [cite: 30] Please leave the device on for five minutes while we update it. [cite: 33] CS: Please inform the hardware team to update the RFID card number. [cite: 35] Once updated, was the client able to use the new card? [cite: 41]", yesNext: "rf_notify_first", noNext: "rf_led_after_update_q" },
-
-      "rf_notify_first": { type: "resolution", text: "Please inform the client that if they want to use a new card, they must notify us first. [cite: 44]" },
-
-      "rf_led_after_update_q": { type: "question", text: "Is the device LED blinking green and red now, or is it just flashing green? [cite: 50]", yesText: "Green & Red [cite: 53]", yesNext: "rf_check_time_tied", noText: "Flashing Green [cite: 96]", noNext: "rf_restart_now_act" },
-
-      "rf_check_time_tied": { type: "question", text: "Is this card tied to a time-based operation? CS: Verify RFID type in Unit Tracker. [cite: 55] Is the updated service time-tied? [cite: 59]", yesNext: "rf_window_notice", noNext: "rf_restart_now_act" },
-
-      "rf_window_notice": { type: "resolution", text: "Please inform the client that they can start using the card within the allocated time window. [cite: 62]" },
-
-      "rf_restart_now_act": { type: "question", text: "Please restart the device. [cite: 66] Are you able to tap the card now? [cite: 69]", yesNext: "rf_ready_res", noNext: "rf_try_diff_q" },
-
-      "rf_try_diff_q": { type: "question", text: "Could you please try a different card? Does it work? [cite: 78]", yesNext: "rf_ready_res", noNext: "rf_num_correct_q" },
-
-      "rf_num_correct_q": { type: "question", text: "Is the card number provided correct? CS: Ask for a picture clearly showing the number. [cite: 84]", yesText: "Correct [cite: 87]", yesNext: "rf_escalate_hw", noText: "Wrong [cite: 91]", noNext: "rf_update_process" },
-
-      "rf_check_op_type": { type: "question", text: "Please let me know the Device ID, and we will check its operation type. [cite: 166] What is the operation type? [cite: 172]", yesText: "RFID Only [cite: 174]", yesNext: "rf_check_config_q", noText: "Other [cite: 178, 180]", noNext: "rf_op_branch" },
-
-      "rf_check_config_q": { type: "question", text: "What is the card number? [cite: 182] Check with hardware team. Is it configured on the device? [cite: 187]", yesNext: "rf_restart_now_act", noNext: "rf_not_in_system" },
-
-      "rf_not_in_system": { type: "resolution", text: "The card number is not in the system. [cite: 193] CS: Inform hardware team to update the number. [cite: 36]" },
-
-      "rf_op_branch": { type: "question", text: "Is the operation type Time based [cite: 176] or No Card [cite: 180]?", yesText: "Time/No Card", yesNext: "rf_auto_trigger_res", noText: "Card-Time [cite: 178]", noNext: "rf_window_schedule" },
-
-      "rf_auto_trigger_res": { type: "resolution", text: "There is no need to tap the card. The machine will automatically trigger the service. [cite: 195, 201]" },
-
-      "rf_window_schedule": { type: "question", text: "The device is set to operate within a certain time window. [cite: 203] Do you want to change the operation time? [cite: 207]", yesNext: "rf_cs_change_time", noNext: "rf_use_allocated_time" },
-
-      "rf_cs_change_time": { type: "resolution", text: "CS: Please get the time and inform the hardware team. [cite: 210]" },
-
-      "rf_use_allocated_time": { type: "resolution", text: "Please use the device based on the allocated time. [cite: 213]" },
-
-      "rf_escalate_hw": { type: "question", text: "Please ask for their availability and contact details. [cite: 89] Escalate this issue to the hardware team. [cite: 90]", yesNext: "tech_support_res", noNext: "tech_support_res" },
-
-      "rf_ready_res": { type: "resolution", text: "The device is ready for operation now. [cite: 72, 284]" },
-
-      /* SHARED PREVIOUS LOGIC [cite: 124, 240, 227] */
+      // Previous Logic 
       "data_start": { type: "question", text: "When was last data received?", yesText: "Yesterday", yesNext: "d_used_today", noText: "1 Week Ago", noNext: "power_start" },
-      "d_used_today": { type: "question", text: "Did client use device today?", yesNext: "d_wait_hour", noNext: "tech_support_res" },
-      "d_wait_hour": { type: "question", text: "Leave on for 1 hour. Data received?", yesNext: "d_slow_net", noNext: "tech_support_res" },
-      "d_slow_net": { type: "resolution", text: "The data uploaded late because of a slow network connection. Ask client to leave device on for 30 mins after service." },
       "power_start": { type: "question", text: "Is the charger plugged in and showing RED?", yesNext: "p_id_check", noNext: "tech_support_res" },
-      "p_id_check": { type: "question", text: "Is ID V0501?", yesNext: "p_boot_wait", noNext: "p_boot_wait" },
-      "p_boot_wait": { type: "question", text: "Restart and wait 1 min. LED Flashing Green?", yesNext: "d_resolved", noNext: "led_start" },
-      "led_start": { type: "question", text: "Is the weight bucket attached?", yesNext: "l_clear_food", noNext: "l_attach_res" },
-      "l_clear_food": { type: "question", text: "Is there food in bucket?", yesNext: "l_clear_res", noNext: "tech_support_res" },
-      "l_attach_res": { type: "resolution", text: "Resolution:<br>Attach bucket and restart device." },
-      "l_clear_res": { type: "resolution", text: "Resolution:<br>Clear food waste and restart." },
-      "d_resolved": { type: "resolution", text: "Success! The device is now ready for use." },
+      "led_start": { type: "question", text: "Is the weight bucket attached?", yesNext: "l_clear_food", noNext: "tech_support_res" },
       "tech_support_res": { type: "resolution", text: "Resolution:<br>Escalate to technical team. Please provide contact details and availability." }
     };
 
