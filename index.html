@@ -1,92 +1,101 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Lumitics Troubleshooting Guide</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lumitics Troubleshooting Hub</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Arial, sans-serif;
       background-image: url('image_1.png'); 
-      background-size: 45% auto; 
+      background-size: 50% auto; 
       background-position: 100% top; 
       background-repeat: no-repeat; 
       background-attachment: fixed; 
+      background-color: #f4f7f9;
       display: flex;
       justify-content: flex-start; 
-      padding-left: 50px; 
-      padding-top: 50px;
+      padding: 20px; 
       min-height: 100vh; 
       margin: 0;
     }
 
-    /* THE MAIN CARD */
+    /* Sketch-based Card Design */
     .card {
-      background: rgba(255, 255, 255, 0.95); 
-      padding: 40px; 
-      border-radius: 60px; /* Large rounded corners from your sketch */
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1); 
+      background: rgba(255, 255, 255, 0.98); 
+      padding: 30px; 
+      border-radius: 60px; 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15); 
       border: 3px solid #004085; 
-      width: 550px; 
+      width: 100%;
+      max-width: 550px; 
       text-align: center; 
-      min-height: 600px; 
       display: flex;
       flex-direction: column;
       align-items: center;
+      margin: auto 0;
+      min-height: 600px;
     }
 
-    /* QUESTION BOX */
+    .step-header {
+      font-size: 14px;
+      color: #004085;
+      font-weight: bold;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+    }
+
+    /* Question Box */
     #display-text {
-      width: 90%;
+      width: 85%;
       border: 2px solid #004085;
       border-radius: 20px;
-      padding: 30px;
-      margin-top: 20px;
+      padding: 25px;
       min-height: 120px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
+      font-size: 1.15rem;
       color: #333;
-      text-align: center;
+      line-height: 1.4;
+      background-color: #fff;
     }
 
-    /* OVAL YES/NO BUTTONS */
+    /* Oval Action Buttons */
     #yes-no-area {
       display: flex;
       justify-content: space-around;
       width: 100%;
-      margin: 60px 0;
+      margin: 50px 0;
     }
     .oval-btn {
       background: white;
-      color: #333;
+      color: #004085;
       border: 2px solid #004085;
-      padding: 20px 50px;
-      border-radius: 100px; /* Creates the oval shape */
-      font-size: 18px;
+      padding: 18px 45px;
+      border-radius: 100px; 
+      font-size: 1.1rem;
+      font-weight: bold;
       cursor: pointer;
       min-width: 140px;
       transition: all 0.2s;
     }
-    .oval-btn:hover {
-      background: #f0f7ff;
-      transform: scale(1.05);
-    }
+    .oval-btn:hover { background: #004085; color: white; transform: scale(1.05); }
 
-    /* ARROW BACK BUTTON */
+    /* Arrow Back Button */
     .arrow-back {
-      position: relative;
-      background: white;
-      color: #333;
+      background: #f8f9fa;
+      color: #004085;
       border: 2px solid #004085;
-      padding: 10px 20px 10px 40px;
-      font-size: 14px;
+      padding: 10px 25px 10px 45px;
+      font-size: 0.9rem;
+      font-weight: bold;
       cursor: pointer;
-      margin-bottom: 40px;
-      clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 25% 100%, 0% 50%); /* Creates arrow shape */
+      margin-bottom: 30px;
+      clip-path: polygon(15% 0%, 100% 0%, 100% 100%, 15% 100%, 0% 50%);
     }
-    .arrow-back:hover { background: #eee; }
 
-    /* HOME ICON BOX */
+    /* Home Button Icon */
     .home-container {
       border: 2px solid #004085;
       border-radius: 20px;
@@ -94,32 +103,24 @@
       cursor: pointer;
       width: 80px;
     }
-    .home-container:hover { background: #eee; }
-    .home-icon {
-      font-size: 40px;
-      display: block;
-    }
-    .home-text {
-      font-size: 12px;
-      font-weight: bold;
-      margin-bottom: 5px;
-      display: block;
-    }
+    .home-icon { font-size: 40px; display: block; }
+    .home-text { font-size: 11px; font-weight: bold; color: #004085;}
 
-    /* MENU STYLING */
-    .instruction-text { text-align: left; width: 90%; font-size: 15px; color: #333; font-weight: bold; margin-bottom: 10px;}
-    #searchBar { width: 95%; padding: 15px; font-size: 16px; margin-bottom: 20px; border: 2px solid #004085; border-radius: 10px; }
-    #issue-list { width: 100%; max-height: 350px; overflow-y: auto; }
-    .menu-btn { display: block; width: 90%; margin: 10px auto; background-color: #2d2d2d; color: white; padding: 15px; border-radius: 10px; text-align: left; border: none; cursor: pointer;}
-    .menu-btn:hover { background-color: #1a1a1a; }
+    /* Menu Styling */
+    #searchBar { width: 95%; padding: 15px; font-size: 1rem; margin-bottom: 20px; border: 2px solid #004085; border-radius: 12px; }
+    .menu-btn { display: block; width: 95%; margin: 12px auto; background-color: #004085; color: white; padding: 18px; border-radius: 12px; text-align: left; border: none; cursor: pointer; font-size: 1rem; }
+    
+    @media (max-width: 768px) {
+      body { background-image: none; justify-content: center; padding: 10px; }
+      .card { border-radius: 40px; }
+    }
   </style>
 </head>
 <body>
 
   <div class="card">
     <div id="menu-screen" style="width: 100%;">
-      <h2 style="color:#004085">Lumitics Troubleshooting Guide</h2> 
-      <p class="instruction-text">Type the issue you faced:</p> 
+      <h2 style="color:#004085">Lumitics Support Hub</h2> 
       <input type="text" id="searchBar" onkeyup="filterIssues()" placeholder="Search symptoms..."> 
       <div id="issue-list">
         <button class="menu-btn" onclick="startDiagnostic('rfid_start')">💳 RFID Card Not Detected</button> 
@@ -130,8 +131,8 @@
     </div>
 
     <div id="diagnostic-screen" style="display: none; flex-direction: column; align-items: center; width: 100%;"> 
-      
-      <div id="display-text">Loading...</div> 
+      <div class="step-header">Current Diagnostic Step</div>
+      <div id="display-text"></div> 
       
       <div id="yes-no-area">
         <button class="oval-btn" id="yes-btn" onclick="makeChoice('Yes')">Yes</button> 
@@ -141,69 +142,68 @@
       <button id="back-btn" class="arrow-back" onclick="goBack()">Back to Previous Step</button>
 
       <div class="home-container" onclick="goToMenu()">
-        <span class="home-text">Home</span>
+        <span class="home-text">HOME</span>
         <span class="home-icon">🏠</span>
       </div>
     </div>
   </div>
 
   <script>
-    // Logic Database (carrying over from our previous work)
     const logicTree = {
-      "rfid_start": { type: "question", text: "Is the device flashing green now?", yesNext: "rf_tap_diff", noNext: "rf_check_light" },
-      "rf_check_light": { type: "question", text: "Is there any light on the device at all?", yesNext: "tech_support_res", noNext: "power_start" },
-      "rf_tap_diff": { type: "question", text: "Please tap a different card on the reader.<br><br>Did the device detect the other card?", yesNext: "rf_led_flash", noNext: "rf_flashing_green" },
-      "rf_flashing_green": { type: "question", text: "Does the device continue to flash green?", yesNext: "tech_support_res", noNext: "power_start" },
-      "rf_led_flash": { type: "question", text: "Did the LED flash green and red when you tapped the card?", yesNext: "rf_new_card", noNext: "rf_led_condition" },
-      "rf_led_condition": { type: "question", text: "Is the LED <b>Solid Green</b>?", yesNext: "rf_solid_green_check", noNext: "rf_is_blinking_red" },
-      "rf_is_blinking_red": { type: "question", text: "Is the LED <b>Blinking Red</b>?", yesNext: "led_start", noNext: "power_start" },
-      "rf_solid_green_check": { type: "question", text: "Did the LED change to solid green immediately?", yesNext: "rf_check_operation_type", noNext: "rf_tap_other" },
-      "rf_tap_other": { type: "question", text: "Did you tap another card?", yesNext: "rf_restart_action", noNext: "tech_support_res" },
-      "rf_new_card": { type: "question", text: "Did you try tapping a new card?", yesNext: "rf_service_type", noNext: "rf_used_before" },
-      "rf_used_before": { type: "question", text: "Have you used this card before?", yesNext: "rf_check_operation_type", noNext: "rf_service_type" },
-      "rf_service_type": { type: "question", text: "Are you starting a <b>new service</b>?", yesNext: "rf_informed_cs", noNext: "rf_get_id_card" },
-      "rf_informed_cs": { type: "question", text: "Have you informed CS about starting the new service?", yesNext: "rf_get_id_card", noNext: "rf_service_details" },
-      "rf_service_details": { type: "resolution", text: "Please provide the Service Name and Operation Time. Technical support will contact you shortly." },
-      "rf_get_id_card": { type: "question", text: "Please provide Device ID and card number. CS: Update number and wait 5 mins. Is card working?", yesNext: "rf_notify_res", noNext: "rf_led_status_after" },
-      "rf_notify_res": { type: "resolution", text: "Success! Inform the client they can start using the card." },
-      "rf_led_status_after": { type: "question", text: "Is the LED flashing green and red now?", yesNext: "rf_time_tied", noNext: "rf_only_flashing_green" },
-      "rf_only_flashing_green": { type: "question", text: "Is it just flashing green?", yesNext: "rf_restart_action", noNext: "tech_support_res" },
-      "rf_time_tied": { type: "question", text: "Is this card tied to a time-based operation?", yesNext: "rf_time_res", noNext: "rf_restart_action" },
-      "rf_time_res": { type: "resolution", text: "Notice: Client can only use the card within the allocated time window." },
-      "rf_restart_action": { type: "question", text: "Please restart the device. Able to tap now?", yesNext: "rf_ready_res", noNext: "rf_diff_card_test" },
-      "rf_diff_card_test": { type: "question", text: "Try a different card. Does it work?", yesNext: "rf_ready_res", noNext: "rf_card_num_check" },
-      "rf_card_num_check": { type: "question", text: "Is the card number correct?", yesNext: "rf_escalate_hw", noNext: "rf_get_id_card" },
-      "rf_check_operation_type": { type: "question", text: "Operation type: Is it <b>RFID only</b>?", yesNext: "rf_hw_config_check", noNext: "rf_is_time_based" },
-      "rf_is_time_based": { type: "question", text: "Is it <b>Time-based</b>?", yesNext: "rf_no_tap_needed", noNext: "rf_is_card_time" },
-      "rf_is_card_time": { type: "question", text: "Is it <b>Card-Time based</b>?", yesNext: "rf_window_notice", noNext: "rf_no_card_type" },
-      "rf_window_notice": { type: "question", text: "Device operates in a window. Change the time?", yesNext: "rf_cs_time_get", noNext: "rf_time_use_res" },
-      "rf_no_card_type": { type: "question", text: "Is it <b>No card</b> type? LED solid green when starting?", yesNext: "rf_no_tap_needed", noNext: "tech_support_res" },
-      "rf_hw_config_check": { type: "question", text: "HW check: Is card configured?", yesNext: "rf_restart_action", noNext: "rf_not_in_system" },
-      "rf_not_in_system": { type: "resolution", text: "Card not in system. Provide ID and number to CS." },
-      "rf_cs_time_get": { type: "resolution", text: "CS: Get desired time and inform hardware team." },
-      "rf_time_use_res": { type: "resolution", text: "Use device based on the allocated time schedule." },
-      "rf_no_tap_needed": { type: "resolution", text: "No card needed. Machine triggers automatically." },
-      "rf_ready_res": { type: "resolution", text: "Success! Device is ready." },
-      "rf_escalate_hw": { type: "resolution", text: "Escalating to hardware team. Provide contact details." },
-      "led_start": { type: "question", text: "Is the weight bucket attached?", yesNext: "l_food_check", noNext: "l_attach_res" },
-      "l_food_check": { type: "question", text: "Is there food in the bucket?", yesNext: "l_clear_res", noNext: "l_sticker_check" },
-      "l_sticker_check": { type: "question", text: "Is blue sticker good?", yesNext: "power_start", noNext: "tech_support_res" },
-      "l_attach_res": { type: "resolution", text: "Attach bucket and restart." },
-      "l_clear_res": { type: "resolution", text: "Clear food waste and restart." },
-      "power_start": { type: "question", text: "Is the charger plugged in?", yesNext: "p_charger_red", noNext: "p_plug_it" },
-      "p_charger_red": { type: "question", text: "Is the charger head light RED?", yesNext: "p_id_check", noNext: "tech_support_res" },
-      "p_plug_it": { type: "question", text: "Plug charger in. Is light RED?", yesNext: "p_id_check", noNext: "tech_support_res" },
-      "p_id_check": { type: "question", text: "Is ID V0501?", yesNext: "p_battery_check", noNext: "p_battery_check" },
-      "p_battery_check": { type: "question", text: "Battery % showing?", yesNext: "p_boot_wait", noNext: "tech_support_res" },
-      "p_boot_wait": { type: "question", text: "Wait 1 min. LED Flashing Green?", yesNext: "d_resolved", noNext: "led_start" },
-      "data_start": { type: "question", text: "Last data received?", yesText: "Yesterday", yesNext: "d_used_today", noText: "1 Week Ago", noNext: "d_why_week" },
-      "d_used_today": { type: "question", text: "Did client use device today?", yesNext: "d_wait_hour", noNext: "d_last_used" },
-      "d_last_used": { type: "question", text: "When last used?", yesText: "Yesterday", yesNext: "d_wait_hour", noText: "1 Week Ago", noNext: "d_why_week" },
+      /* UPDATED RFID LOGIC [cite: 1] */
+      "rfid_start": { type: "question", text: "Is the device flashing green now? [cite: 221]", yesNext: "rf_tap_diff", noNext: "rf_check_led_status" },
+      "rf_tap_diff": { type: "question", text: "Please tap a different card on the reader. [cite: 240] <br><br> Did the device detect it? [cite: 9]", yesNext: "rf_led_flash_check", noNext: "rf_cont_flash" },
+      "rf_cont_flash": { type: "question", text: "Does the device continue to flash green, or is there no light at all? [cite: 237]", yesText: "Flashing Green", yesNext: "tech_support_res", noText: "No Light", noNext: "power_start" },
+      
+      "rf_led_flash_check": { type: "question", text: "Did the LED flash green and red when you tapped the card? [cite: 14]", yesNext: "rf_new_or_replacement", noNext: "rf_led_condition" },
+      "rf_led_condition": { type: "question", text: "What is the condition of the LED now? [cite: 225]", yesText: "Solid Green", yesNext: "rf_solid_green_check", noText: "Flashing Red", noNext: "led_start" },
+      "rf_solid_green_check": { type: "question", text: "Did the LED change to solid green immediately after starting? [cite: 229]", yesNext: "rf_get_device_id", noNext: "rf_tap_other" },
+      "rf_tap_other": { type: "question", text: "Did you tap another card? [cite: 233]", yesNext: "rf_restart_device", noNext: "tech_support_res" },
+      
+      "rf_new_or_replacement": { type: "question", text: "Are you starting a new service, or is this a replacement for a lost card? [cite: 25]", yesText: "Replacement", yesNext: "rf_get_id_card", noText: "New Service", noNext: "rf_start_new_service" },
+      "rf_get_id_card": { type: "question", text: "Please provide Device ID and RFID number. [cite: 30] <br><br> CS: Inform hardware team to update. [cite: 35] <br><br> Was the client able to use the new card? [cite: 41]", yesNext: "rf_success_res", noNext: "rf_led_after_update" },
+      "rf_led_after_update": { type: "question", text: "Is the LED flashing green and red, or just flashing green? [cite: 50]", yesText: "Green & Red", yesNext: "rf_check_time_tied", noText: "Flashing Green", noNext: "rf_restart_device" },
+      "rf_check_time_tied": { type: "question", text: "Is this card tied to a time-based operation? [cite: 55] <br><br> Verify RFID type in Tracker. Is it time-tied? [cite: 59]", yesNext: "rf_time_window_res", noNext: "rf_restart_device" },
+      
+      "rf_restart_device": { type: "question", text: "Please restart the device. [cite: 66] <br><br> Are you able to tap the card now? [cite: 69]", yesNext: "rf_ready_res", noNext: "rf_try_different" },
+      "rf_try_different": { type: "question", text: "Could you please try a different card? Does it work? [cite: 78]", yesNext: "rf_ready_res", noNext: "rf_num_correct" },
+      "rf_num_correct": { type: "question", text: "Is the card number provided correct? CS: Verify with picture. [cite: 84]", yesNext: "rf_escalate_hw", noNext: "rf_get_id_card" },
+      
+      "rf_start_new_service": { type: "question", text: "Starting a new service. [cite: 146] <br><br> Have you informed CS about starting the new service? [cite: 149]", yesNext: "rf_get_id_card", noNext: "rf_need_details" },
+      "rf_need_details": { type: "resolution", text: "We need Service Name and Operation Time. [cite: 155] We will check with the account manager and get back to you. [cite: 157]" },
+
+      "rf_get_device_id": { type: "question", text: "Please provide the Device ID to check operation type. [cite: 166] <br><br> Is it RFID only? [cite: 174]", yesNext: "rf_hw_config", noNext: "rf_check_time_based" },
+      "rf_hw_config": { type: "question", text: "Check card number with hardware team. [cite: 184] <br><br> Is it configured on the device? [cite: 187]", yesNext: "rf_restart_device", noNext: "rf_not_in_system" },
+      "rf_check_time_based": { type: "question", text: "Is the operation Time-based? [cite: 176]", yesNext: "rf_automatic_trigger", noNext: "rf_check_card_time" },
+      "rf_automatic_trigger": { type: "resolution", text: "No need to tap. Machine triggers automatically based on schedule. [cite: 194, 201]" },
+      "rf_check_card_time": { type: "question", text: "Is it Card-Time based? [cite: 178] <br><br> Do you want to change the operation time? [cite: 207]", yesNext: "rf_cs_get_time", noNext: "rf_follow_schedule" },
+      
+      "rf_check_led_status": { type: "question", text: "What is the LED status now? [cite: 257] <br><br> Is it Solid Green? [cite: 259]", yesNext: "rf_press_green_btn", noNext: "power_start" },
+      "rf_press_green_btn": { type: "question", text: "Please press the green button. [cite: 261] <br><br> Did the weight bucket move? [cite: 264]", yesNext: "rf_restart_check", noNext: "rf_restart_device" },
+      "rf_restart_check": { type: "question", text: "Did the device flash green after restarting? [cite: 271]", yesNext: "rf_tap_after_restart", noNext: "rf_led_condition" },
+      "rf_tap_after_restart": { type: "question", text: "Please tap the card now. [cite: 277] <br><br> Did LED change from flashing to solid green? [cite: 280]", yesNext: "rf_ready_res", noNext: "rf_tap_diff" },
+
+      "rf_success_res": { type: "resolution", text: "Please inform the client to notify us first before using new cards. [cite: 44]" },
+      "rf_ready_res": { type: "resolution", text: "The machine is now ready for operation. [cite: 72, 283]" },
+      "rf_time_window_res": { type: "resolution", text: "Client can only use the card within the allocated time window. [cite: 62]" },
+      "rf_follow_schedule": { type: "resolution", text: "Please use the device based on the allocated time. [cite: 213]" },
+      "rf_cs_get_time": { type: "resolution", text: "CS: Please get the time and inform hardware team. [cite: 210]" },
+      "rf_not_in_system": { type: "resolution", text: "Card number is not in the system. [cite: 193]" },
+      "rf_escalate_hw": { type: "resolution", text: "Escalating issue to hardware team. [cite: 90]" },
+
+      /* PREVIOUS SHARED LOGIC */
+      "data_start": { type: "question", text: "When was last data received?", yesText: "Yesterday", yesNext: "d_used_today", noText: "1 Week Ago", noNext: "power_start" },
+      "d_used_today": { type: "question", text: "Did client use device today?", yesNext: "d_wait_hour", noNext: "tech_support_res" },
       "d_wait_hour": { type: "question", text: "Leave on for 1 hour. Data received?", yesNext: "d_slow_net", noNext: "tech_support_res" },
       "d_slow_net": { type: "resolution", text: "Slow network. Leave on 30 mins after service." },
-      "d_why_week": { type: "question", text: "Why no use for a week?", yesText: "Power issue", yesNext: "power_start", noText: "Kitchen closed", noNext: "tech_support_res" },
-      "d_resolved": { type: "resolution", text: "Issue Resolved!" },
-      "tech_support_res": { type: "resolution", text: "Resolution: <br><br> Please provide contact information. Technical team will reach out shortly." }
+      "power_start": { type: "question", text: "Is the charger showing RED?", yesNext: "p_id_check", noNext: "tech_support_res" },
+      "p_id_check": { type: "question", text: "Is ID V0501?", yesNext: "p_boot_wait", noNext: "p_boot_wait" },
+      "p_boot_wait": { type: "question", text: "Restart and wait 1 min. LED Flashing Green?", yesNext: "d_resolved", noNext: "led_start" },
+      "led_start": { type: "question", text: "Is weight bucket attached?", yesNext: "l_clear_food", noNext: "tech_support_res" },
+      "l_clear_food": { type: "question", text: "Is there food in bucket?", yesNext: "l_clear_res", noNext: "tech_support_res" },
+      "l_clear_res": { type: "resolution", text: "Clear food waste and restart." },
+      "d_resolved": { type: "resolution", text: "Success! The device is now ready for use." },
+      "tech_support_res": { type: "resolution", text: "Resolution:<br>Escalate to technical team. Please provide contact details." }
     };
 
     let currentNode = ""; 
@@ -225,21 +225,20 @@
     }
 
     function updateScreen() {
-      let node = logicTree[currentNode]; 
-      let textBox = document.getElementById("display-text"); 
-      let yesNoArea = document.getElementById("yes-no-area"); 
-      let backBtn = document.getElementById("back-btn");
-      let yesBtn = document.getElementById("yes-btn");
-      let noBtn = document.getElementById("no-btn");
+      const node = logicTree[currentNode]; 
+      const textBox = document.getElementById("display-text"); 
+      const yesNoArea = document.getElementById("yes-no-area"); 
+      const backBtn = document.getElementById("back-btn");
+      const yesBtn = document.getElementById("yes-btn");
+      const noBtn = document.getElementById("no-btn");
 
       textBox.innerHTML = node.text; 
       yesBtn.innerText = node.yesText || "Yes";
       noBtn.innerText = node.noText || "No";
-
       backBtn.style.visibility = (history.length > 0) ? "visible" : "hidden";
 
       if (node.type === "resolution") {
-        textBox.style.borderColor = "#28a745"; /* Green border for resolution */
+        textBox.style.borderColor = "#28a745"; 
         textBox.style.color = "#28a745";
         yesNoArea.style.display = "none";      
       } else {
@@ -251,11 +250,7 @@
 
     function makeChoice(answer) {
       history.push(currentNode); 
-      if (answer === 'Yes') {
-        currentNode = logicTree[currentNode].yesNext; 
-      } else {
-        currentNode = logicTree[currentNode].noNext; 
-      }
+      currentNode = answer === 'Yes' ? logicTree[currentNode].yesNext : logicTree[currentNode].noNext; 
       updateScreen(); 
     }
 
@@ -267,14 +262,13 @@
     }
 
     function filterIssues() {
-      let input = document.getElementById('searchBar').value.toLowerCase(); 
-      let buttons = document.getElementById('issue-list').getElementsByTagName('button'); 
+      const input = document.getElementById('searchBar').value.toLowerCase(); 
+      const buttons = document.getElementById('issue-list').getElementsByTagName('button'); 
       for (let i = 0; i < buttons.length; i++) {
-        let btnText = buttons[i].innerText.toLowerCase(); 
+        const btnText = buttons[i].innerText.toLowerCase(); 
         buttons[i].style.display = btnText.includes(input) ? "block" : "none";
       }
     }
   </script>
 </body>
-
 </html>
